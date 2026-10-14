@@ -1,0 +1,5 @@
+{"ts": 1792000848.479018, "source": "DEMO", "device": "Synthetic sensor", "direction": "in", "hex": "aa 01 00 19 40 01 00 55", "length": 8, "label": "SYNTHETIC — NOT LIVE DATA"}
+{"ts": 1792000848.679018, "source": "DEMO", "device": "Synthetic sensor", "direction": "in", "hex": "aa 01 00 1a 40 01 00 54", "length": 8, "label": "SYNTHETIC — NOT LIVE DATA"}
+{"ts": 1792000848.879018, "source": "DEMO", "device": "Synthetic sensor", "direction": "in", "hex": "aa 01 00 1c 40 02 00 51", "length": 8, "label": "SYNTHETIC — NOT LIVE DATA"}
+{"ts": 1792000849.079018, "source": "DEMO", "device": "Synthetic sensor", "direction": "in", "hex": "aa 01 00 1e 40 02 00 4f", "length": 8, "label": "SYNTHETIC — NOT LIVE DATA"}
+{"ts": 1792000849.279018, "source": "DEMO", "device": "Synthetic sensor", "direction": "in", "hex": "aa 01 00 21 40 03 00 4b", "length": 8, "label": "SYNTHETIC — NOT LIVE DATA"}

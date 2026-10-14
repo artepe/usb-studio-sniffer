@@ -2,9 +2,9 @@
 
 **A friendly, local USB hex explorer for hardware hackers.**
 
-Capture readable application-level USB serial / HID reports; analyze and compare packets byte-by-byte; import Wireshark USB bus captures. A fast, dependency-free offline HTML dashboard highlights constant versus changing bytes.
+Capture USB serial / HID reports and import Wireshark USB bus captures. **Automatic message recognition** groups similar observations, infers candidate type bytes, highlights changed fields and flags possible length, counter, padding and checksum fields. Everything runs locally, with a dependency-free HTML dashboard.
 
-![Status](https://img.shields.io/badge/status-v0.1_MVP-9b84ff) ![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![License](https://img.shields.io/badge/license-MIT-purple)
+![Status](https://img.shields.io/badge/status-v0.2_protocol_discovery-9b84ff) ![Python](https://img.shields.io/badge/python-3.10%2B-blue) ![License](https://img.shields.io/badge/license-MIT-purple)
 
 ## macOS / Linux / Windows quick start
 
@@ -20,6 +20,37 @@ python3 -m usb_studio devices
 ```
 
 If the `usb-studio` command is installed, it can be used instead of `python3 -m usb_studio`.
+
+## 🔍 Automatic message recognition (new in v0.2)
+
+Start with the synthetic sample, no connected hardware or extra packages required:
+
+```bash
+python3 -m usb_studio demo
+python3 -m usb_studio analyze usb-demo.jsonl --html recognized.html
+# macOS: open recognized.html
+# Linux: xdg-open recognized.html
+# Windows: start recognized.html
+```
+
+To analyze real reports saved from a device:
+
+```bash
+python3 -m usb_studio analyze your-recording.jsonl -o your-analysis.json --html your-report.html
+# Or simply:
+python3 -m usb_studio view your-recording.jsonl -o your-report.html
+```
+
+The **Automatic message recognition** section appears in every generated HTML viewer. It shows:
+
+- Candidate message families grouped by device, direction, endpoint and message length; repeated early type/opcode bytes may split a family further.
+- Example hex patterns with `??` marking bytes that changed across samples, and lists of variable offsets.
+- Possible 8-bit incremental counters, 8-bit additive/XOR/CRC-8 checks, CRC-16/Modbus little-endian checks and simple additive constant relationships.
+- Possible length fields, inferred only when captures show multiple observed lengths.
+- Fixed trailing zero padding, common in USB HID reports.
+- JSON export for further analysis or custom decoders.
+
+**Important limitations:** These are **heuristics**, not automatic proprietary protocol decoding. A serial `read()` may return half a message or several messages; analysis can't determine boundaries reliably without a protocol framing rule. Similar byte patterns don't establish that a field is an opcode, temperature or checksum. Take multiple controlled captures while changing **one setting at a time**, and validate hypotheses using unseen captures. The built-in demo uses **synthetic** bytes, not real Ouman traffic. No device writes or replay are performed.
 
 ## Capture serial reports (USB CDC / USB-to-UART)
 
@@ -70,7 +101,7 @@ python3 -m usb_studio compare before.jsonl after.jsonl -o differences.json
 
 It reports changed byte offsets in the **first non-empty frame** and per-offset variation/entropy across each session (first 256 offsets). For meaningful comparisons, use captures from the same device/report type and align frames. This is a byte-level hint, **not** proof of field meaning or a checksum algorithm.
 
-## v0.1 features
+## v0.2 features
 
 - ✅ Cross-platform USB serial / HID device enumeration (optional Python dependencies)
 - ✅ Live incoming serial or HID reads to `.jsonl`, with duration and max event limits
@@ -78,13 +109,17 @@ It reports changed byte offsets in the **first non-empty frame** and per-offset 
 - ✅ Import Wireshark USB PCAP or PCAPNG captures (requires `tshark`)
 - ✅ Offline HTML report viewer with filter, event metadata and hex explorer
 - ✅ Compare two capture sessions and analyze variable byte offsets, basic entropy
+- ✅ Automatically group report/message candidates and suggest byte-field interpretations
+- ✅ Recognize possible length bytes, counters, CRC8, CRC16/Modbus, sum/xor checks and trailing padding
+- ✅ Export analyzed patterns as JSON and browse them in an offline HTML dashboard
 - ✅ Synthetic demo and automated tests; no cloud account, telemetry or network services
 
 ## Roadmap
 
 - [ ] Better transaction pairing and endpoint filters
 - [ ] Desktop GUI with connect/capture controls
-- [ ] Bit-level diff and inferred counter/checksum candidates
+- [x] Initial counter/checksum/length heuristics (candidate recognition, not guaranteed)
+- [ ] Robust serial frame boundary inference and protocol-specific validation
 - [ ] Custom protocol profiles / presets for Ouman EH-800 hardware research
 - [ ] Export to Python struct parsers and HID/serial decoder templates
 - [ ] Streaming large-file import, privacy scrubber

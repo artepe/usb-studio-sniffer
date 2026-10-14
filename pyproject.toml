@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+[project]
+name = "usb-studio-sniffer"
+version = "0.2.0"
+description = "Local USB serial, HID and USB bus capture explorer with automatic message recognition and hex diff"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+keywords = ["usb", "reverse-engineering", "hid", "serial", "sniffer", "wireshark"]
+[project.optional-dependencies]
+serial = ["pyserial>=3.5"]
+hid = ["hidapi>=0.14"]
+all = ["pyserial>=3.5", "hidapi>=0.14"]
+[project.scripts]
+usb-studio = "usb_studio.cli:main"
+[tool.setuptools.packages.find]
+include = ["usb_studio*"]

@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv/
+build/
+dist/
+*.egg-info/
+*.pcap
+*.pcapng
+*.jsonl
+usb-report.html
+usb-demo.html
+usb-diff.json
